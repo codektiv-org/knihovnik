@@ -1,0 +1,18 @@
+name: knihovnik
+
+services:
+  db:
+    extends:
+      file: compose.shared.yml
+      service: db
+  app:
+    build: .
+    environment:
+      - DATABASE_URL=postgresql://${SERVICE_USER_POSTGRES}:${SERVICE_PASSWORD_POSTGRES}@db:5432/knihovnik
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+
+volumes:
+  db-data: null

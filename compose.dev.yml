@@ -1,0 +1,12 @@
+name: knihovnik-dev
+
+services:
+  db:
+    extends:
+      file: compose.shared.yml
+      service: db
+    ports:
+      - 5432:5432
+
+volumes:
+  db-data: null
