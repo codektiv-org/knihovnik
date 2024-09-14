@@ -19,7 +19,7 @@ export default {
       },
     },
   },
-  darkMode: ["selector", '[data-theme="dark"]'],
+  darkMode: ["class", '[data-theme="dark"]'],
   plugins: [daisyui],
   daisyui: {
     themes: false,

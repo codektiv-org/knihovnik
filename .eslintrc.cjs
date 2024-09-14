@@ -24,6 +24,17 @@ module.exports = {
   // Base config
   extends: ["eslint:recommended"],
 
+  rules: {
+    '@typescript-eslint/no-unused-vars': [
+        'warn', // or "error"
+        {
+            argsIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
+            caughtErrorsIgnorePattern: '^_',
+        },
+    ],
+  },
+
   overrides: [
     // React
     {
