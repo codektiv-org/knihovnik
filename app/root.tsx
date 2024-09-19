@@ -5,13 +5,20 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 
 import "./tailwind.css";
 
 export const links: LinksFunction = () => [
   // TODO:
 ];
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: __APP_NAME__ },
+    { name: "description", content: `Welcome to ${__APP_NAME__}!` },
+  ];
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
