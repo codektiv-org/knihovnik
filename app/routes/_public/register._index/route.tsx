@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { parseWithZod } from "@conform-to/zod";
 import { ActionFunctionArgs, json } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
+import { Form, Link, useActionData } from "@remix-run/react";
 import { getFormProps, useForm } from "@conform-to/react";
 import FormBox from "../FormBox";
 import { FormField } from "../FormField";
+import ModeSwitcher from "../ModeSwitcher";
 
 const schema = z.object({
   userName: z
@@ -36,11 +37,31 @@ export default function Register() {
 
   return (
     <FormBox subtitle="Register">
-      <form method="post" {...getFormProps(form)}>
-        <FormField label="E-mail" type="email" field={fields.email} />
-        <FormField label="Password" type="password" field={fields.password} />
-        <FormField label="User name" type="text" field={fields.userName} />
-        <FormField label="Full name" type="text" field={fields.fullName} />
+      <Form {...getFormProps(form)}>
+        <FormField
+          label="E-mail"
+          type="email"
+          field={fields.email}
+          autoComplete="email"
+        />
+        <FormField
+          label="Password"
+          type="password"
+          field={fields.password}
+          autoComplete="new-password"
+        />
+        <FormField
+          label="User name"
+          type="text"
+          field={fields.userName}
+          autoComplete="username"
+        />
+        <FormField
+          label="Full name"
+          type="text"
+          field={fields.fullName}
+          autoComplete="name"
+        />
         <FormField label="Pronouns" type="text" field={fields.pronouns} />
 
         <div className="flex mt-4">
@@ -48,11 +69,20 @@ export default function Register() {
             Register
           </button>
         </div>
-      </form>
+      </Form>
 
       {form.errors ? (
         <p className="p-1 text-error text-center">{form.errors}</p>
       ) : undefined}
+
+      <ModeSwitcher>
+        <div>
+          <Link className="underline" to="/login">
+            <span className="font-normal">Already have an account?</span> Log
+            in!
+          </Link>
+        </div>
+      </ModeSwitcher>
     </FormBox>
   );
 }

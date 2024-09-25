@@ -4,8 +4,16 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import type {
+  LinksFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node";
+import { Theme, themeContext } from "~/utils/theme";
+import { themeCookie } from "./utils/theme.server";
 
 import "./tailwind.css";
 
@@ -20,9 +28,21 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const theme = await themeCookie.parse(await request.headers.get("cookie"));
+
+  return json({ theme: (theme as Theme) ?? "dark" });
+};
+
+function Layout({
+  children,
+  theme,
+}: {
+  children: React.ReactNode;
+  theme: Theme;
+}) {
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" data-theme={theme}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -30,7 +50,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <themeContext.Provider value={theme}>{children}</themeContext.Provider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -39,5 +59,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const { theme } = useLoaderData<typeof loader>();
+
+  return (
+    <Layout theme={theme}>
+      <Outlet />
+    </Layout>
+  );
+}
+
+export function ErrorBoundary() {
+  return (
+    <Layout theme="dark">
+      <Outlet />
+    </Layout>
+  );
 }
